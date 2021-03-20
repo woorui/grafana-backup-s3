@@ -1,0 +1,7 @@
+url: "GRAFANA_REQUEST_URL"
+apiKeys: "GRAFANA_APIKEYS"
+accessKeyId: "S3_ACCESS_KEY"
+secretAccessKey: "S3_ACCESS_SECRET"
+bucket: "S3_BUCKET"
+region: "S3_REGION"      
+prefix: "S3_UPLOAD_FILE_PATH_PREFIX"
