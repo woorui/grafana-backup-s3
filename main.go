@@ -249,7 +249,7 @@ func compress(src string, buf io.Writer) error {
 			return err
 		}
 
-		header.Name = filepath.ToSlash(file)
+		header.Name = "dashboards" + diffpath(src, file)
 
 		if err := tw.WriteHeader(header); err != nil {
 			return err
@@ -274,4 +274,24 @@ func compress(src string, buf io.Writer) error {
 		return err
 	}
 	return nil
+}
+
+// diffpath return string that omit same prefix between a and b,
+func diffpath(a, b string) string {
+	long, short := b, a
+	if len(a) > len(b) {
+		long, short = a, b
+	}
+	if len(a) == len(b) {
+		return ""
+	}
+	i := 0
+
+	for i < len(short) {
+		if short[i] != long[i] {
+			break
+		}
+		i++
+	}
+	return long[i:]
 }
