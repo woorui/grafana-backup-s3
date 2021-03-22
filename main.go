@@ -107,7 +107,8 @@ func UploadFileToS3(c *Config, src string) error {
 	if err != nil {
 		return err
 	}
-	filename := path.Join(c.Prefix, file.Name())
+	filename := path.Join(c.Prefix, filepath.Base(src))
+	fmt.Println(filename)
 	_, err = s3.NewFromConfig(cfg).PutObject(context.TODO(), &s3.PutObjectInput{
 		Bucket: &c.Bucket,
 		Key:    &filename,
