@@ -213,7 +213,7 @@ func Do(c *Config) {
 	if err != nil {
 		log.Fatalf("compress %s error %s \n", root, err.Error())
 	}
-	zipname := fmt.Sprintf("./%s.tar.gzip", root)
+	zipname := fmt.Sprintf("%s.tar.gzip", root)
 	zipFile, err := os.OpenFile(zipname, os.O_CREATE|os.O_RDWR, os.FileMode(0600))
 	if err != nil {
 		log.Fatalf("compress %s error %s \n", root, err.Error())

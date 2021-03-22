@@ -3,7 +3,7 @@ backup grafana dashboard to s3 or local
 
 Build for my ubuntu
 ```
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build main.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o www
 ```
 
 Get it
