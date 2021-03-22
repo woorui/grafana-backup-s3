@@ -22,6 +22,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/mitchellh/go-homedir"
 	"gopkg.in/yaml.v2"
 )
 
@@ -33,6 +34,7 @@ type Config struct {
 	Bucket          string `yaml:"bucket"`
 	Region          string `yaml:"region"`
 	Prefix          string `yaml:"prefix"`
+	LocalDir        string `yaml:"localDir"`
 }
 
 // Search is grafana dashboard search api result
@@ -63,11 +65,17 @@ secretAccessKey: "S3_ACCESS_SECRET"
 bucket: "S3_BUCKET"
 region: "S3_REGION"      
 prefix: "S3_UPLOAD_FILE_PATH_PREFIX"
+localDir: "LOCAL_PATH_TO_SAVE_COMPRESS_FILE" # default $HOME/grafana-backup/
 --------       
 	`)
 	flag.Parse()
 
-	b, err := ioutil.ReadFile(*p)
+	c := readConfig(*p)
+	Do(c)
+}
+
+func readConfig(p string) *Config {
+	b, err := ioutil.ReadFile(p)
 	if err != nil {
 		if os.IsNotExist(err) {
 			log.Fatal("It needs a config file by -file flag")
@@ -78,8 +86,7 @@ prefix: "S3_UPLOAD_FILE_PATH_PREFIX"
 	if err := yaml.Unmarshal(b, c); err != nil {
 		fmt.Printf("load config file error %s \n", err.Error())
 	}
-
-	Do(c)
+	return c
 }
 
 func UploadFileToS3(c *Config, src string) error {
@@ -153,7 +160,14 @@ func FetchGrafanaDashBoard(c *Config, uri string) ([]byte, error) {
 }
 
 func Do(c *Config) {
-	root := path.Join("./", strconv.Itoa(int(time.Now().Unix())))
+	if c.LocalDir == "" {
+		dir, err := homedir.Dir()
+		if err != nil {
+			log.Fatalln("get home dir error", err.Error())
+		}
+		c.LocalDir = path.Join(dir, "grafana-backup")
+	}
+	root := path.Join(c.LocalDir, strconv.Itoa(int(time.Now().Unix())))
 	searchs, err := FetchGrafanaSearch(c)
 	if err != nil {
 		log.Fatalln("fetch grafana search api failed", err)
