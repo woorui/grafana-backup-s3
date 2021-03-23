@@ -4,13 +4,11 @@ import (
 	"testing"
 )
 
-type diffpathTest struct {
+var mockdata = []struct {
 	a      string
 	b      string
 	except string
-}
-
-var mockdata = []diffpathTest{
+}{
 	{a: "/Users/wurui/grafana-backup/1616398799", b: "/Users/wurui/grafana-backup/1616398799/080", except: "/080"},
 	{a: "/Users/wurui/grafana-backup/1616398799", b: "/Users/wurui/grafana-backup/1616398799", except: ""},
 	{a: "", b: "", except: ""},
