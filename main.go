@@ -100,6 +100,7 @@ func UploadFileToS3(c *Config, src string) error {
 	}
 	defer file.Close()
 	cfg, err := config.LoadDefaultConfig(context.TODO(),
+		config.WithDefaultRegion(c.Region),
 		config.WithCredentialsProvider(
 			credentials.NewStaticCredentialsProvider(c.AccessKeyId, c.SecretAccessKey, ""),
 		),
